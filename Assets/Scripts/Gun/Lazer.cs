@@ -6,12 +6,14 @@ using UnityEngine;
 public class Lazer : Gun
 {
     public override event Action<WPName, int> OnFire;
+    public override event Action<WPName, int> OnRegenCammo;
+
     IEnumerator RegenCammo()
     {
         while (!isFire && currentCammo < data.Magazine)
         {
             currentCammo++;
-            OnFire?.Invoke(data.WPName, currentCammo);
+            OnRegenCammo?.Invoke(data.WPName, currentCammo);
             yield return new WaitForSeconds(data.LimitSpeed);
         }
     }

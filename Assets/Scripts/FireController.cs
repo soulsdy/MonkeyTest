@@ -11,17 +11,55 @@ public class FireController : MonoBehaviour
     [SerializeField] private Gun currentGun;
     [SerializeField] private ButtonFire btnFire;
     public event Action<WPName, int> OnFire;
+    public event Action<WPName> OnReload;
+    public event Action<WPName, int> OnReloaded;
+    public event Action<WPName, int> OnRegenCammo;
+
     void Start()
     {
-        btnFire.OnFireSelect += FireSelect;
 
+
+    }
+    private void OnEnable()
+    {
+        btnFire.OnFireSelect += FireSelect;
         btnFire.OnFireDeselect += FireDeselect;
         foreach (var gun in guns)
         {
             gun.OnFire += OnGunFire;
+            gun.OnReload += OnGunReload;
+            gun.OnReloaded += OnGunReloaded;
+            gun.OnRegenCammo += OnGunRegenCammo;
         }
-
     }
+    private void Oisable()
+    {
+        btnFire.OnFireSelect -= FireSelect;
+        btnFire.OnFireDeselect -= FireDeselect;
+        foreach (var gun in guns)
+        {
+            gun.OnFire -= OnGunFire;
+            gun.OnReload -= OnGunReload;
+            gun.OnReloaded -= OnGunReloaded;
+            gun.OnRegenCammo -= OnGunRegenCammo;
+        }
+    }
+
+    private void OnGunRegenCammo(WPName name, int cammo)
+    {
+        OnRegenCammo?.Invoke(name, cammo);
+    }
+
+    private void OnGunReloaded(WPName name, int cammo)
+    {
+        OnReloaded?.Invoke(name, cammo);
+    }
+
+    private void OnGunReload(WPName name)
+    {
+        OnReload?.Invoke(name);
+    }
+
     public void InitData(List<GunData> gunDatas, WPName startGun)
     {
         foreach (var data in gunDatas)

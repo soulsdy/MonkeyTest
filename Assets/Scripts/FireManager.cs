@@ -13,6 +13,10 @@ public class FireManager : MonoBehaviour
     [SerializeField] private FireController fireController;
     void Start()
     {
+
+    }
+    private void OnEnable()
+    {
         foreach (var item in btnsChangeWP)
         {
             item.OnClick += ChangeWP;
@@ -20,7 +24,37 @@ public class FireManager : MonoBehaviour
         }
         currentBtnChange = btnsChangeWP[0];
         fireController.OnFire += OnFire;
+        fireController.OnReload += OnReload;
+        fireController.OnReloaded += OnReloaded;
+        fireController.OnRegenCammo += OnRegenCammo;
         fireController.InitData(weaponDatas, currentBtnChange.WPName);
+    }
+
+    private void OnRegenCammo(WPName name, int cammo)
+    {
+        Debug.Log("Gun " + name + " Regen");
+        currentBtnChange.UpdateCammo(cammo);
+    }
+
+    private void OnReloaded(WPName name, int cammo)
+    {
+        Debug.Log("Gun " + name + " Reloaded");
+        currentBtnChange.UpdateCammo(cammo);
+    }
+
+    private void OnReload(WPName name)
+    {
+        Debug.Log("Gun " + name + " Reload");
+    }
+
+    private void OnDisable()
+    {
+        foreach (var item in btnsChangeWP)
+        {
+            item.OnClick -= ChangeWP;
+        }
+        fireController.OnFire -= OnFire;
+
     }
 
     private void OnFire(WPName name, int cammo)

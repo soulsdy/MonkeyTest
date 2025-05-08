@@ -7,6 +7,9 @@ public class Gun : MonoBehaviour
 {
     [SerializeField] protected GunData data;
     public virtual event Action<WPName, int> OnFire;
+    public virtual event Action<WPName> OnReload;
+    public virtual event Action<WPName, int> OnReloaded;
+    public virtual event Action<WPName, int> OnRegenCammo;
     protected int currentCammo;
     [SerializeField] protected bool isFire, fireAvaiable = true;
     public WPName WPName
@@ -23,9 +26,9 @@ public class Gun : MonoBehaviour
     }
     public void StartFire()
     {
+        if (!fireAvaiable) return;
         isFire = true;
-        if (fireAvaiable)
-            StartCoroutine(DelayFire());
+        StartCoroutine(DelayFire());
     }
     public virtual void StopFire()
     {
@@ -45,8 +48,10 @@ public class Gun : MonoBehaviour
     IEnumerator StartReload()
     {
         StopFire();
+        OnReload?.Invoke(data.WPName);
         yield return new WaitForSeconds(data.ReloadTime);
         currentCammo = data.Magazine;
+        OnReloaded?.Invoke(data.WPName, currentCammo);
         StartFire();
 
     }
