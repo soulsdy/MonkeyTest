@@ -2117,7 +2117,7 @@ MonoBehaviour:
       speed: 0
       timeToEx: 0
   - wPName: 1
-    magazine: 2
+    magazine: 5
     reloadTime: 2
     limitSpeed: 0
     attackSpeed: 0.5
